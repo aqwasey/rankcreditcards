@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Credit Cards Sorting [Summary]";
+}
+ 
+<div class="text-center">
+    <h6 class="display-4">Credit Cards Records</h6>
+    <hr />
+    <div>
+        <p>
+        A granular overview of all the recorded credit card records.<br/>
+        <b>Below is a representation of the accumulated credit cards history</b>
+        </p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mx-auto">
+                <div style="width: 400px; height: 500px; margin-top: 20px; margin-bottom: 20px;" class="justify-content-center">
+                    <canvas id="myChart" width="450" height="450"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <p>You can <a href="All">click here</a> to view credit cards history in a tabular format.</p>
+    </div>
+
+</div>
+
+<script>
+    $.ajax({  
+        type: "GET",  
+        url: "OverallSummary",  
+        contentType: "application/json; charset=utf-8",  
+        dataType: "json",  
+        success: function (rdata) {
+            var ds = rdata;
+            // retrieving all the values at index 0
+            const lbls = rdata.map(({[0]: v }) => v); 
+            // retrieving all the values at index 1
+            const dbs = rdata.map(({[1]: v }) => v);
+            var databag = {  
+                labels: lbls,  
+                datasets: [{  
+                    label: "Credit Card History",  
+                    data: dbs,  
+                    fill: true,  
+                    backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)"],  
+                    borderColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)"],  
+                    borderWidth: 1  
+                }]  
+            };  
+            var ctx = $("#myChart").get(0).getContext("2d");  
+            var myNewChart = new Chart(ctx, {  
+                type: 'pie',  
+                data: databag,  
+                options: {  
+                    responsive: true,  
+                    title: { display: true, text: 'Credit Card History' },  
+                    legend: { position: 'bottom' }
+                }  
+            });  
+        }  
+    } );  
+
+</script>

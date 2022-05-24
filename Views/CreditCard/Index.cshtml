@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Credit Cards Sorting";
+}
+ 
+<div class="text-center">
+    <h6 class="display-4">RANK Corporation</h6>
+    <hr />
+    <div>
+        <p>
+            CCSortApp is a RANK Corporation service that assist in sorting and recording <br />
+            clients' Credit Card records<br/>
+            <br />
+        </p>
+        <p>
+            Using the below options you can enter or upload a batch of credit card list, <br />
+            as well as to view the summary of all the credit card history 
+        </p>
+    </div>
+    <div class="container px-4">
+        <div class="row gx-5">
+            <div class="col">
+                <div class="p-2 border bg-light">
+                    <br />
+                    <img src="~/img/cards.png" class="text-center" alt="credit card" /><br /><br />
+                    <i>Quickly enter a credit card or simply upload a batch file of credit cards</i>
+                    <br /><br />
+                    <a href="CreditCard/Upload">Add or Upload Cards</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-2 border bg-light">
+                    <br />
+                    <img src="~/img/growth.png" class="text-center" alt="summary" /><br /><br />
+                    <i>Overall summary of all the various credit cards that have been recorded.</i>
+                    <br /><br />
+                    <a href="CreditCard/Summary">Overall Credit Card Summary</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

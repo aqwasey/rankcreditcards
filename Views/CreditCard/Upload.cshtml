@@ -1,0 +1,163 @@
+@{
+    ViewData["Title"] = "Credit Cards Sorting [Upload]";
+}
+ 
+<div class="text-center">
+    <h6 class="display-4">Add or Upload Credit Cards</h6>
+    <hr />
+    <div>
+        <h5>
+        You basically enter a credit card or upload a batch of credit cards to upload on the platform...<br/>
+        Choose from a simple entry or browse for your batch file<br />
+        </h5>
+        <br /><br />
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Enter Credit Card</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Upload Credit Cards</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="tab-content" id="pills-tabContent">
+
+                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                <div class="mb-3">
+                                    <form action="SingleEntry" method="post">
+                                        <label for="cardNo" class="form-label">Enter the Credit Card</label>
+                                        <input type="text" class="form-control form-control-lg input-cc" id="cardNo" name="cardNo" maxlength="20" minlength="15" placeholder="Enter Credit Card" required="required" /> <br />
+                                        <div class="d-grid gap-2 col-6 mx-auto">
+                                            <input type="submit" class="btn btn-success" id="singleCard" value=" Add Card " />
+                                        </div>
+                                    </form>
+                                    <div id="status" style="margin-top: 30px;">
+                                    </div>
+                                </div> 
+                            </div>
+
+                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <div class="mb-3">
+                                    <form action="" method="post" enctype="multipart/form-data">
+                                        <label for="upFile" class="form-label">Batch upload only accept .txt files ONLY.</label>
+                                        <input type="file" accept=".txt, text/plain" id="uploadFile" class="form-control" text="Browse" name="upload" /><br />
+                                        <div class="d-grid gap-2 col-6 mx-auto">
+                                            <button class="btn btn-success" id="fileUpload">&nbsp; Upload File &nbsp;</button>
+                                        </div>
+                                    </form>
+                                    <div id="statusUpload" style="margin-top: 30px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    
+    var cleave = new Cleave('.input-cc', {
+        creditCard: true,
+    });
+
+    $(document).ready(function(){
+
+        let selected_filename;
+        let selected_file;
+
+        // this function manages the click action under the single entry of a credit card
+        $("#singleCard").click(function(evt) {
+            evt.preventDefault();
+            var raw_card = $('#cardNo').val();
+            var new_card = raw_card.replace(/\s+/g, '');
+            if(!new_card) {
+                // when input field is empty
+                $("#status").html("Oops! You need to provide a credit card number").addClass("alert alert-warning").show().delay(10000).fadeOut();
+            }else {
+               $.post('SingleEntry', {cardNo: new_card})
+                .done(function(resp){
+                    // check if card already exist 
+                    if (resp.indexOf("exist") > -1 || resp.contains("Exist") > -1) {
+                        $("#status").html(resp).addClass("alert alert-warning").show().delay(10000).fadeOut();
+                    }else {
+                        // when action completed successfully
+                        $("#status").html(resp).addClass("alert alert-success").show().delay(10000).fadeOut();
+                        $("#cardNo").val('').focus();
+                    }
+                })
+                .fail(function(err) {
+                    // when an error is caught or raised
+                    $("#status").html(err).removeClass("alert alert-error").show().delay(10000).fadeOut();
+                });
+            }
+        });
+
+
+        $('input[type="file"]').change(function (evt) {
+            selected_file = evt.target.files[0];
+            selected_filename = selected_file.name;
+        });
+
+        // this function manages the upload button
+        $("#fileUpload").click(function(evt) {
+            evt.preventDefault();
+            // check whether or not a file has been selected
+            if ($('#uploadFile').get(0).files.length === 0) {
+                $("#statusUpload").html("Oops! You need to select a file to upload").addClass("alert alert-warning").show().delay(10000).fadeOut();
+                return false;
+            }
+
+            var postfile = new FormData();
+            postfile.append('rawfile', selected_file);
+            postfile.append('rawfile_name', selected_filename);
+            
+            $.ajax({
+                type: 'post',
+                url: 'BatchEntry',
+                data: postfile, 
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                  // Here we show the loader
+                  $('#statusUpload').html("<i class='fas fa-spinner fa-spin'></i>").show();
+                },
+                success: function(resp){
+                    console.log(resp);
+                    // check if card already exist 
+                    if (resp.indexOf("not") > -1) {
+                        $("#statusUpload").html(resp).addClass("alert alert-warning").show().delay(40000).fadeOut();
+                    }else {
+                        // when action completed successfully
+                        console.log(resp);
+                        $("#statusUpload").html(resp).addClass("alert alert-success").show().delay(50000).fadeOut();
+                        $("#uploadFile").val(null);
+                    }
+                },
+                error: function(err) {
+                    // when an error is caught or raised
+                    $("#statusUpload").html(err).removeClass("alert alert-error").show().delay(10000).fadeOut();
+                }
+            });
+
+        });
+
+    });
+
+</script>

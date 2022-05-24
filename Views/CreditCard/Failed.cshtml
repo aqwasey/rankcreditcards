@@ -1,0 +1,57 @@
+@model CCSortApp.Models.CreditCard
+@{
+    ViewData["Title"] = "Credit Cards Sorting";
+}
+@{
+    List<CreditCard> found_cards = (List<CreditCard>) ViewBag.allCards;
+}
+ 
+<div class="text-center">
+    <h1 class="display-4">Credit Cards History</h1>
+    <hr />
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h4>Below are the current status of the list of Credit Cards records</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Card Type</th>
+                            <th scope="col">Card No.</th>
+                            <th scope="col">Created on</th>
+                            <th scope="col">Recorded By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (found_cards.Count == 0) {
+                        <tr>
+                            <th scope="row"></th>
+                            <td>No Card Record(s) Found</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        }else {
+                            foreach(CreditCard cardItem in found_cards) {
+                                <tr>
+                                    <th scope="row">#</th>
+                                    <td>@cardItem.CardGroup</td>
+                                    <td>@cardItem.CardNo</td>
+                                    <td>@cardItem.CreatedOn</td>
+                                    <td>@cardItem.EntryType</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
