@@ -40,23 +40,6 @@ namespace CCSortApp.Validators {
                 }    
             }
 
-            /*
-            List<string> tempValid = new List<string>();
-            List<string> refineValid = new List<string>();
-
-            for(int i = 0; i < valid_cards.Count; i++) {
-                // identify which type of a card
-                string rawCard = CardIdentifier(valid_cards[i]);
-                // if card returned any of the below results
-                // remove from the valid cards list
-                if ((new [] {"UNKNOWN", "Invalid Card Format"}).Contains(rawCard)){
-                    // add to invalid card list
-                    invalid_cards.Add(valid_cards[i]);
-                    // remove item from list
-                    valid_cards.RemoveAt(i);
-                }
-            } */
-
             List<object> final_cards = new List<object> { valid_cards, invalid_cards };
             return final_cards;
         }
