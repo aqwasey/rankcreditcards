@@ -134,10 +134,10 @@
                 data: postfile, 
                 processData: false,
                 contentType: false,
-                beforeSend: function() {
+                /**beforeSend: function() {
                   // Here we show the loader
                   $('#statusUpload').html("<i class='fas fa-spinner fa-spin'></i>").show();
-                },
+                },**/
                 success: function(resp){
                     console.log(resp);
                     // check if card already exist 
